@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f9fc">
+  <title>Free Online Image Compressor</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="index.html" aria-label="Image Compressor home">
+        <span class="brand-mark" aria-hidden="true">IC</span>
+        <span>Image Compressor</span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="#how-to">How it works</a>
+        <a href="#faq">FAQs</a>
+        <a class="nav-cta" href="#compressor">Compress an image <span aria-hidden="true">↓</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero container">
+      <p class="eyebrow"><span class="eyebrow-dot" aria-hidden="true"></span> Private by design · No account needed</p>
+      <h1>Free Online<br class="mobile-break"> Image Compressor</h1>
+      <p class="hero-copy">Make image files smaller right in your browser. Choose a format, fine-tune quality and compare the result before you download.</p>
+    </section>
+
+    <section class="tool-section container" id="compressor" aria-labelledby="tool-heading">
+      <div class="tool-card">
+        <div class="tool-heading">
+          <div>
+            <p class="eyebrow">YOUR IMAGE, YOUR DEVICE</p>
+            <h2 id="tool-heading">Compress an image</h2>
+          </div>
+          <div class="tool-heading-actions">
+            <button type="button" class="text-button" id="start-over-button">Start Over</button>
+            <span class="local-badge"><span aria-hidden="true">●</span> Processed in your browser</span>
+          </div>
+        </div>
+
+        <ol class="quick-steps" aria-label="Three quick steps">
+          <li><span>1</span><strong>Add image</strong></li>
+          <li><span>2</span><strong>Set &amp; compress</strong></li>
+          <li><span>3</span><strong>Preview &amp; download</strong></li>
+        </ol>
+
+        <div class="upload-zone" id="drop-zone">
+          <input class="visually-hidden" id="image-file" type="file" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" aria-describedby="upload-help">
+          <div class="upload-icon" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none"><path d="M16 21V5m0 0-6 6m6-6 6 6M6 20v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <p class="upload-title">Drop an image here, or <label class="file-label" for="image-file">browse files</label></p>
+          <p class="upload-help" id="upload-help">JPG, PNG or WebP · Up to 12 MB and 12 megapixels · One image at a time</p>
+          <p class="upload-help">Your image is processed on this device, not uploaded to an image service.</p>
+        </div>
+
+        <p id="status-message" class="status-message" role="status" aria-live="polite"></p>
+
+        <div class="workspace" id="workspace" hidden>
+          <div class="file-summary">
+            <div class="file-identity">
+              <span class="file-icon" aria-hidden="true">IMG</span>
+              <div class="file-details">
+                <p class="file-name" id="file-name"></p>
+                <p class="file-meta" id="file-meta"></p>
+              </div>
+            </div>
+            <button type="button" class="text-button" id="reset-button">Choose another</button>
+          </div>
+
+          <div class="settings-grid">
+            <div class="field">
+              <label for="format-select">Output format</label>
+              <select id="format-select">
+                <option value="auto">Auto (keep original format)</option>
+                <option value="image/jpeg">JPG</option>
+                <option value="image/png">PNG</option>
+                <option value="image/webp">WebP</option>
+              </select>
+              <p class="field-hint" id="format-hint">Auto keeps the original format.</p>
+            </div>
+            <div class="field" id="quality-field">
+              <label for="quality-range">Image quality <span class="quality-value" id="quality-value">80%</span></label>
+              <input id="quality-range" type="range" min="10" max="100" value="80">
+              <p class="field-hint" id="quality-hint">Lower quality usually means a smaller JPG or WebP.</p>
+            </div>
+            <div class="field background-field" id="background-field" hidden>
+              <label for="background-color">JPG background colour</label>
+              <div class="color-control"><input id="background-color" type="color" value="#ffffff"><span>Transparent areas will use this colour.</span></div>
+              <p class="field-hint">JPG does not support transparency.</p>
+            </div>
+          </div>
+
+          <div class="preview-grid">
+            <figure class="preview-card">
+              <figcaption><span>Original</span><span class="preview-size" id="original-size"></span></figcaption>
+              <div class="preview-frame"><img id="original-preview" alt="Preview of the original image"></div>
+              <p class="preview-dimensions" id="original-dimensions"></p>
+            </figure>
+            <figure class="preview-card">
+              <figcaption><span>Compressed</span><span class="preview-size" id="result-size">Not processed yet</span></figcaption>
+              <div class="preview-frame result-frame" id="result-frame">
+                <div class="preview-placeholder" id="result-placeholder">
+                  <span class="placeholder-icon" aria-hidden="true">↘</span>
+                  <span>Your result will appear here</span>
+                </div>
+                <img id="result-preview" alt="Preview of the compressed image" hidden>
+              </div>
+              <p class="preview-dimensions" id="result-dimensions">Same pixel dimensions as the original</p>
+            </figure>
+          </div>
+
+          <div class="compress-action">
+            <button type="button" class="button button-primary" id="compress-button">Compress image</button>
+          </div>
+          <div class="result-summary" id="result-summary" hidden aria-live="polite">
+            <div class="saving-indicator" id="saving-indicator" aria-hidden="true">−</div>
+            <div class="saving-copy">
+              <p class="saving-title" id="saving-title"></p>
+              <p class="saving-details" id="saving-details"></p>
+            </div>
+            <a class="button button-primary download-button" id="download-button">Download image</a>
+          </div>
+          <div class="original-offer" id="original-offer" hidden>
+            <p>This output is larger than your original. Try a lower quality or another format, or download the original instead.</p>
+            <button type="button" class="button button-secondary" id="lower-quality-button">Try lower quality</button>
+            <a class="button button-secondary" id="original-download">Download original</a>
+          </div>
+
+          <p class="metadata-note">Images are exported from their pixels. The output will not include the original metadata, such as EXIF camera details or location.</p>
+        </div>
+        <noscript><p class="noscript-note">Please enable JavaScript to use the image compressor. Your image is processed locally when the tool is running.</p></noscript>
+      </div>
+      <p class="under-tool-note"><span aria-hidden="true">ⓘ</span> Maximum file size is 12 MB and 12 megapixels. Your browser and device still need enough memory to decode the image.</p>
+    </section>
+
+    <section class="content-section container" id="how-to">
+      <div class="section-intro">
+        <p class="eyebrow">A SIMPLE WORKFLOW</p>
+        <h2>How to compress an image</h2>
+        <p>Use the preview and file sizes to decide whether the result suits your needs. Compression is not guaranteed to make every image smaller.</p>
+      </div>
+      <ol class="steps-grid">
+        <li class="step-card"><span class="step-number">01</span><h3>Add your image</h3><p>Choose one JPG, PNG or WebP file, or drop it into the upload area. The file stays in your browser for processing.</p></li>
+        <li class="step-card"><span class="step-number">02</span><h3>Choose format and quality</h3><p>Keep the original format with Auto, or select JPG, PNG or WebP. Quality adjusts lossy JPG and WebP output, not PNG.</p></li>
+        <li class="step-card"><span class="step-number">03</span><h3>Compare and download</h3><p>Compress the image, inspect both previews and compare their actual file sizes. Download the result only if it looks right to you.</p></li>
+      </ol>
+    </section>
+
+    <section class="content-section container" id="why-compress">
+      <div class="section-intro">
+        <p class="eyebrow">WHY FILE SIZE MATTERS</p>
+        <h2>Smaller images are easier to use</h2>
+        <p>Image dimensions and file size solve different problems. A large file takes more space to store and can take longer to upload, share or transfer over a network. Some websites and apps also set file-size limits. Reducing the encoded file size can help meet those needs without changing its pixel dimensions, though the best result depends on the image and format.</p>
+      </div>
+    </section>
+
+    <section class="content-section container" id="formats">
+      <div class="section-intro">
+        <p class="eyebrow">PICK THE RIGHT OUTPUT</p>
+        <h2>JPG, PNG and WebP</h2>
+        <p>The best format depends on the image and where you plan to use it. Changing formats can affect appearance, transparency and file size.</p>
+      </div>
+      <div class="format-grid">
+        <article class="info-card"><span class="format-label">JPG / JPEG</span><h3>Photographs and complex scenes</h3><p>JPG uses lossy compression and does not support transparency. A lower quality setting can reduce file size, but may add visible artefacts. This tool composites transparent areas over the background colour you choose.</p></article>
+        <article class="info-card"><span class="format-label format-png">PNG</span><h3>Transparency and crisp graphics</h3><p>PNG uses lossless compression, so it preserves pixel values rather than using a JPG-style quality setting. It is often useful for transparent graphics, but photographs saved as PNG can be large. This tool does not offer a separate PNG compression level.</p></article>
+        <article class="info-card"><span class="format-label format-webp">WebP</span><h3>A modern web image format</h3><p>WebP supports lossy and lossless encoding, and can carry transparency. This tool uses browser canvas encoding; its quality control applies to lossy encoding. Browser support and resulting size depend on the browser and image.</p></article>
+      </div>
+    </section>
+
+    <section class="content-section container" id="compression-types">
+      <div class="section-intro">
+        <p class="eyebrow">TWO APPROACHES</p>
+        <h2>Lossy and lossless compression</h2>
+        <p>Lossy compression removes some image information to make a smaller encoded file. The change can be subtle or visible depending on the image and encoder settings; repeatedly re-saving a lossy image can introduce further changes. JPG is lossy, and WebP can be encoded in lossy or lossless modes.</p>
+        <p>Lossless compression stores the image pixels without discarding image information, although the file's representation may be more compact. PNG uses lossless compression. If a PNG is already efficiently encoded, re-encoding it may not reduce its size. This tool uses the browser's PNG encoder and does not provide a separate PNG compression level.</p>
+      </div>
+    </section>
+
+    <section class="content-section container" id="quality">
+      <div class="two-column">
+        <div>
+          <p class="eyebrow">QUALITY WITHOUT GUESSWORK</p>
+          <h2>How to choose image quality</h2>
+          <p>For JPG or WebP output, the quality control changes the encoder's quality hint. It is not a promise of a particular visual score or file-size reduction. A lower setting often makes a smaller file, but may make edges, fine texture or gradients look worse.</p>
+          <p>Start at the default, compare the result at the size you intend to use, and adjust only if needed. For text, logos and sharp illustrations, check edges closely. The browser's encoder may produce different results from other software.</p>
+        </div>
+        <aside class="callout">
+          <span class="callout-icon" aria-hidden="true">↔</span>
+          <h3>Dimensions are not file size</h3>
+          <p>Dimensions count an image's pixels, such as 2400 × 1600. File size counts the bytes needed to store it. This tool keeps the pixel dimensions unchanged; compression changes how those pixels are encoded.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="content-section container" id="why-larger">
+      <div class="section-intro">
+        <p class="eyebrow">A NOTE ABOUT RESULTS</p>
+        <h2>Why an image may not get smaller</h2>
+        <p>A format conversion or re-encoding is not always more compact. Some common reasons include:</p>
+      </div>
+      <ul class="reason-list">
+        <li><span class="reason-mark" aria-hidden="true">1</span><span><strong>The original is already optimized.</strong> Re-encoding a well-compressed JPG or WebP may save very little, or add bytes.</span></li>
+        <li><span class="reason-mark" aria-hidden="true">2</span><span><strong>PNG uses a different approach.</strong> It is lossless, and a JPG-like quality slider cannot shrink it. Photographic PNGs can remain large.</span></li>
+        <li><span class="reason-mark" aria-hidden="true">3</span><span><strong>The selected format fits poorly.</strong> Converting simple graphics or photographs to a different format can increase the output size.</span></li>
+        <li><span class="reason-mark" aria-hidden="true">4</span><span><strong>Canvas re-encoding changes the file.</strong> Browser encoders and their settings differ; the new file is not guaranteed to beat the source.</span></li>
+      </ul>
+      <p class="body-note">If the result is larger, the tool says so and offers the original file. You can still preview and download the newly encoded image if you prefer its format or appearance.</p>
+    </section>
+
+    <section class="privacy-band">
+      <div class="container privacy-band-inner">
+        <div class="privacy-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M16 3 5 7v8c0 7 4.7 11.6 11 14 6.3-2.4 11-7 11-14V7L16 3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="m11.5 16 3 3 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><p class="eyebrow">LOCAL IMAGE PROCESSING</p><h2>Your image stays on your device</h2><p>The compressor reads the selected file in your browser and draws it to a browser canvas to create the output. This site does not send your image to an image-processing server. Temporary previews use browser memory and are released when you choose another image or reset.</p><a class="inline-link" href="privacy.html">Read the full Privacy Policy <span aria-hidden="true">→</span></a></div>
+      </div>
+    </section>
+
+    <section class="content-section container" id="limitations">
+      <div class="section-intro">
+        <p class="eyebrow">BEFORE YOU START</p>
+        <h2>Supported files and limitations</h2>
+      </div>
+      <div class="limitations-grid">
+        <div class="limitation"><h3>Supported input</h3><p>Still JPG/JPEG, PNG and WebP images, up to 12 MB and 12 megapixels per file. Animated WebP and GIF, SVG and HEIC are not supported.</p></div>
+        <div class="limitation"><h3>Browser resources</h3><p>Image decoding needs memory in addition to the file's size. A 12-megapixel image can still exceed available memory on a constrained device, even when its file is below the limit.</p></div>
+        <div class="limitation"><h3>Orientation and metadata</h3><p>Images are decoded and re-encoded by your browser. Orientation handling depends on the browser's image decoder. Export removes source metadata, including EXIF information.</p></div>
+        <div class="limitation"><h3>Browser support</h3><p>Use a current browser with JavaScript, Web Workers and Canvas support. If background canvas processing is unavailable, the tool uses a smaller main-thread fallback limited to 4 megapixels; larger images need background-processing support. Available output formats and results vary across browsers.</p></div>
+      </div>
+    </section>
+
+    <section class="content-section container faq-section" id="faq">
+      <div class="section-intro">
+        <p class="eyebrow">GOOD TO KNOW</p>
+        <h2>Frequently asked questions</h2>
+      </div>
+      <div class="faq-list">
+        <details><summary>Are my images uploaded or stored?</summary><p>The compressor reads your chosen image in this browser and creates its output locally. It does not upload the image to an image-processing service or store it in site local storage. The hosting provider still receives ordinary website requests, which may be logged under its own practices. See the <a href="privacy.html">Privacy Policy</a>.</p></details>
+        <details><summary>Will compressing an image always make it smaller?</summary><p>No. The original may already be efficiently encoded, or the chosen format and browser encoder may produce a larger file. The tool compares actual byte sizes and offers the original when the new output is larger.</p></details>
+        <details><summary>Does the quality slider work for PNG?</summary><p>No. The slider is for lossy JPG and WebP encoding. PNG is encoded using the browser's PNG encoder, and this tool does not expose a PNG compression-level control.</p></details>
+        <details><summary>Will my image remain transparent?</summary><p>PNG and WebP can preserve transparency when the browser supports the selected output. JPG has no transparency: when you choose JPG, the transparent parts are placed over the background colour shown in the tool.</p></details>
+        <details><summary>Does the tool keep the original image dimensions?</summary><p>Yes. The tool re-encodes the image without resizing it. Pixel dimensions and file size are different things: smaller encoded size does not mean fewer pixels.</p></details>
+        <details><summary>What happens to EXIF and other metadata?</summary><p>The browser exports a new image from decoded pixels, so source metadata such as camera details, timestamps and GPS location is not included in the output. Some browsers may handle orientation differently while decoding; inspect the preview before downloading.</p></details>
+        <details><summary>Why did my file fail to load?</summary><p>Check that it is a valid, still JPG, PNG or WebP image no larger than 12 MB or 12 megapixels. Animated files, corrupted data, unsupported encodings, or limited browser memory can prevent processing. Try a current browser or a smaller image copy.</p></details>
+        <details><summary>Can I compress several images at once?</summary><p>Not at the moment. The tool processes one image at a time so you can review each result before downloading it.</p></details>
+      </div>
+    </section>
+
+    <section class="creator-section container">
+      <div class="creator-card">
+        <div class="creator-avatar" aria-hidden="true">SG</div>
+        <div class="creator-copy"><p class="eyebrow">ABOUT THIS PROJECT</p><h2>Made and maintained by Sourabh Ghatoye</h2><p>Sourabh works in Digital Marketing &amp; SEO and created this lightweight image compressor to help people make practical image-format and file-size choices. The tool is designed to process images in the browser, without an image-upload service.</p><p><a href="https://www.instagram.com/sourabh.ghatoye/" rel="noopener noreferrer" target="_blank">Instagram: @sourabh.ghatoye</a></p><a class="inline-link" href="about.html">More about the project <span aria-hidden="true">→</span></a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">IC</span><span>Image Compressor</span></a><p>One focused tool for making image files smaller in your browser.</p></div>
+      <nav class="footer-links" aria-label="Footer navigation">
+        <a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy Policy</a><a href="terms.html">Terms &amp; Conditions</a><a href="disclaimer.html">Disclaimer</a>
+      </nav>
+    </div>
+    <div class="container footer-bottom"><span>Created and maintained by Sourabh Ghatoye</span><span>Image files are processed on your device.</span></div>
+  </footer>
+</body>
+</html>
